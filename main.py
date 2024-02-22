@@ -1,5 +1,4 @@
 import os
-import discord
 from discord import Intents, Client, Message
 from dotenv import load_dotenv
 
