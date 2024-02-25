@@ -1,26 +1,20 @@
 import os
-from discord import Intents, Client, Message
+import discord
 from dotenv import load_dotenv
 
 # LOAD OUR TOKEN
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-# BOT SETUP
-intents: Intents = Intents.default()
+class MyClient(discord.Client):
+    async def on_ready(self):
+        print(f'Logged on as {self.user}!')
+
+    async def on_message(self, message):
+        print(f'Message from {message.author}: {message.content}')
+
+intents = discord.Intents.default()
 intents.message_content = True
-client: Client = Client(intents=intents)
 
-# BOT STARTUP
-@client.event
-async def on_ready() -> None:
-    print(f'{client.user} is now running!')
-
+client = MyClient(intents=intents)
 client.run(TOKEN)
-
-# MAIN
-def main() -> None:
-    client.run(TOKEN)
-
-if __name__ == '__main__':
-    main()
