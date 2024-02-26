@@ -1,5 +1,7 @@
 import os
 import discord
+import requests
+import nltk
 from dotenv import load_dotenv
 from random import randint
 
