@@ -79,6 +79,7 @@ class MyClient(discord.Client):
         await self.on_fail(message)
 
     def congrats(self, message):
+        # ADD LOGIC FOR SPECIAL MESSAGE ON STREAK OF 5/10/15/20
         rhyme_confirmation = choice([f"Correct ✅  {message.content} rhymes with {self.word_to_rhyme}."])
         congratulations = ["You are on fire🔥!", "You are killing it!", "You are doing great!", "Well done!",
                           "Great job!"]
