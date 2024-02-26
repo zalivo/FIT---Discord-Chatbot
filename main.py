@@ -2,6 +2,7 @@ import os
 import discord
 import requests
 import nltk
+import time
 from dotenv import load_dotenv
 from random import randint, choice
 
