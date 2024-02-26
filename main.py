@@ -82,13 +82,13 @@ class MyClient(discord.Client):
         rhyme_confirmation = choice([f"Correct ✅  {message.content} rhymes with {self.word_to_rhyme}."])
         congratulations = ["You are on fire🔥!", "You are killing it!", "You are doing great!", "Well done!",
                           "Great job!"]
-        score_messages = [" Your score is ", " You have ", " You are at ", " You have "]
+        score_messages = [" Your streak is at ", " You have a streak of", " You are at ", " You have "]
 
         score_msg = choice(score_messages) + str(self.score)
         if self.score == 1:
-            score_msg += ' point.'
+            score_msg += ' rhyme.'
         else:
-            score_msg += ' points.'
+            score_msg += ' rhymes.'
         if self.score < 2:
             congratulation = congratulations[3]
 
