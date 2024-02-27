@@ -10,7 +10,6 @@ from random import randint, choice
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-
 class Piccolo(discord.Client):
     word_to_rhyme = ''  # Variable to decide which word is going to be used for rhyming
     rhyming_words = []  # Store list of words given from the API
@@ -79,6 +78,11 @@ class Piccolo(discord.Client):
             print("Error:", response.status_code, response.text)
 
     async def rhyme(self, message):
+        """
+        This function is for listening to the words that the user sends and checking if they rhyme with the word to rhyme
+        :param message:
+        :return:
+        """
         # Check is the words has been used already
         if message.content in self.used_words:
             await message.channel.send("You already used that word")
