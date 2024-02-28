@@ -10,6 +10,7 @@ from random import randint, choice
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
+
 class Piccolo(discord.Client):
     word_to_rhyme = ''  # Variable to decide which word is going to be used for rhyming
     rhyming_words = []  # Store list of words given from the API
@@ -129,7 +130,8 @@ class Piccolo(discord.Client):
     async def on_fail(self, message, reason="does not rhyme"):
         """
         This function is called when the user fails to rhyme a word
-        :param message: 
+        :param reason:
+        :param message:
         :return: 
         """
         # Check if author is already in the penalty dictionary
