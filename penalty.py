@@ -1,4 +1,4 @@
-from random import randint, choice
+from random import choice
 
 
 class Penalty:
@@ -15,12 +15,6 @@ class Penalty:
             self.penalty_points[author] += 1
         else:
             self.penalty_points[author] = 1
-
-    def message_on_fail(self, author):
-        return choice([
-            f"{author} goofed up! ❌",
-            f"Ding ding ding! 🔔 {author} made a mistake",
-            f"Ouch! {author} made a mistake ❌"])
 
     def message_on_penalty(self, author):
         """

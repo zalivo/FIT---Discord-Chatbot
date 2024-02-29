@@ -1,19 +1,20 @@
-import time
-
-import nltk
-from random import randint, choice
-from penalty import Penalty
+from random import choice
 
 import rhyme
+from penalty import Penalty
 from startingletter import StartingLetter
 
 
 class Competition:
+    """
+    This class is for the competition
+    It stores the number of rounds, the current round, the possible games, the games, and the penalty points
+    """
     def __init__(self, num_rounds=3):
         print(num_rounds)
         self.num_rounds = num_rounds  # Number of rounds
         self.game_round = 0  # Current round
-        self.possible_games = [rhyme.Rhyme, StartingLetter]  # List of possible games
+        self.possible_games = [rhyme.Rhyme, StartingLetter]  # List of possible games ADD NEW GAMES HERE
         self.penalty = Penalty()  # We are using the penalty class to store the penalty points of the players
 
         # generate games here, and shuffle them such that they don't repeat right after each other
@@ -41,6 +42,7 @@ class Competition:
         :return:
         """
         print("Playing a game")
+        message.content = message.content.lower()
         # TODO: Move logic for repeated words to here
         # TODO: Make people unable to respond consecutively
         await self.game().play(message)
