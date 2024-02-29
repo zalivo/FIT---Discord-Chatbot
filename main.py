@@ -13,7 +13,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 
 class Bot(discord.Client):
-    competition = None  # Empty competition
+    competition = None  # The competition, if there is one
 
     async def on_message(self, message):
         """
@@ -26,15 +26,12 @@ class Bot(discord.Client):
             return
         if not self.competition:
             await self.start_competition(message)
-        else:
-            if self.competition.game:  # If a game is running
-                await self.competition.play(message)
+        else:  # If a competition is running
+            if self.competition.round == self.competition.rounds:  # If the game is over
+                await message.channel.send("The game is over! 🏁")
+                self.competition = None
             else:
-                if self.competition.round < self.competition.rounds:
-                    await self.competition.start_a_game(message)
-                else:
-                    await message.channel.send("The game is over! 🏁")
-                    self.competition = None
+                await self.competition.play(message)
 
     async def start_competition(self, message):
         """
@@ -47,13 +44,15 @@ class Bot(discord.Client):
         words = tokenizer.tokenize(message.content)
         if 'start' in words and 'game' in words:  # If the message contains the words "start" and "game" the game starts
             await message.channel.send(
-                "Hey, my name is Piccolo and I'll be your Gamemaster 😎 \n https://giphy.com/gifs/mma-announcer-carlos-kremer-xT39Db8zIOODTppk08")
-            time.sleep(3)
+                "Hey, my name is Piccolo and I'll be your Game-master 😎 "
+                "\n https://giphy.com/gifs/mma-announcer-carlos-kremer-xT39Db8zIOODTppk08")
+            time.sleep(1)
             self.competition = Competition()
             await self.competition.start_a_game(message)
         else:  # It will tell the user how to start the game
             await message.channel.send(
-                'Hello, if you would like to start a game jus type "start game" 🤓 \n https://giphy.com/gifs/Friends-episode-15-friends-tv-the-one-where-estelle-dies-W3a0zO282fuBpsqqyD')
+                'Hello, if you would like to start a game just type "start game" 🤓 '
+                '\n https://giphy.com/gifs/Friends-episode-15-friends-tv-the-one-where-estelle-dies-W3a0zO282fuBpsqqyD')
 
 
 intents = discord.Intents.default()
