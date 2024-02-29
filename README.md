@@ -22,3 +22,8 @@ async def play(self, message):
     # YOUR GAME LOGIC
     pass 
 ```
+call
+```python
+await self.competition.start_a_game(message)
+```
+to end your minigame

@@ -22,6 +22,12 @@ class Competition:
         # TODO shuffle them such that they don't repeat right after each other
 
     async def start_a_game(self, message):
+        """
+        This function is called when the game is started by the user
+        or whenever a minigame is over (the minigame calls this function when it is over)
+        :param message:
+        :return:
+        """
         print("Starting a new game")
         self.game_round += 1
         if self.game_round == self.num_rounds + 1:  # If the game is over
@@ -37,14 +43,15 @@ class Competition:
 
     async def play(self, message):
         """
-
+        This gets called each time the user sends a message, while the game is running
         :param message:
         :return:
         """
         print("Playing a game")
-        message.content = message.content.lower()
-        # TODO: Move logic for repeated words to here
+        # TODO: Add curses, like full capslock or end the sentence with "your honour" or "I object" or "I rest my case"
         # TODO: Make people unable to respond consecutively
+        message.content = message.content.lower()
+        # TODO: process the message
         await self.game().play(message)
 
     def game(self):
