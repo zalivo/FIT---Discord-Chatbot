@@ -24,14 +24,14 @@ class Bot(discord.Client):
         print(f'Message from {message.author}: {message.content}')
         if message.author == client.user:
             return
+        # TODO: add commands, to skip a game, to see the leaderboard, to see the rules, to see the help, end the game
         if not self.competition:
             await self.start_competition(message)
         else:  # If a competition is running
-            if self.competition.round == self.competition.rounds:  # If the game is over
-                await message.channel.send("The game is over! 🏁")
+            await self.competition.play(message)
+            # check if the game is over
+            if self.competition.game_round == self.competition.num_rounds + 1:
                 self.competition = None
-            else:
-                await self.competition.play(message)
 
     async def start_competition(self, message):
         """
@@ -42,12 +42,18 @@ class Bot(discord.Client):
         print("Starting a new competition")
         tokenizer = nltk.tokenize.TweetTokenizer()
         words = tokenizer.tokenize(message.content)
-        if 'start' in words and 'game' in words:  # If the message contains the words "start" and "game" the game starts
+        if 'start' in words or 'game' in words:  # If the message contains the words "start" and "game" the game starts
             await message.channel.send(
                 "Hey, my name is Piccolo and I'll be your Game-master 😎 "
                 "\n https://giphy.com/gifs/mma-announcer-carlos-kremer-xT39Db8zIOODTppk08")
             time.sleep(1)
-            self.competition = Competition()
+            # if a number is given, use it as the number of rounds, the number can be anywhere in the message
+            for word in words:
+                if word.isdigit():
+                    self.competition = Competition(int(word))
+                    break
+            if not self.competition:
+                self.competition = Competition()
             await self.competition.start_a_game(message)
         else:  # It will tell the user how to start the game
             await message.channel.send(

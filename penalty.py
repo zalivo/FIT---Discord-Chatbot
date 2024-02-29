@@ -2,7 +2,19 @@ from random import randint, choice
 
 
 class Penalty:
-    penalty_points = {}
+    def __init__(self):
+        self.penalty_points = {}  # python garbage collector is garbage
+
+    def penalty(self, author):
+        """
+        This function is called when a player makes a mistake
+        :param author:
+        :return:
+        """
+        if author in self.penalty_points:
+            self.penalty_points[author] += 1
+        else:
+            self.penalty_points[author] = 1
 
     def message_on_fail(self, author):
         return choice([
@@ -38,5 +50,3 @@ class Penalty:
                  f"They are steadily collecting penalty points, they have {self.penalty_points[author]} now.",
                  f"{author} has {self.penalty_points[author]} penalty points now."
                  ])
-
-

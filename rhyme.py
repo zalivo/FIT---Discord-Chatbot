@@ -1,6 +1,8 @@
 from random import randint, choice
 import requests
+from wonderwords import RandomWord
 
+randomWord = RandomWord()
 
 class Rhyme:
     word_to_rhyme = ''  # Variable to decide which word is going to be used for rhyming
@@ -8,9 +10,9 @@ class Rhyme:
     used_words = []  # Store list of words that are already used
     streak = 0  # Keeping track of the correct rhymes in a row
 
+
     def __init__(self, competition_object):
         self.competition = competition_object  # We are using the competition class to store the competition
-        self.penalty = competition_object.penalty  # We are using the penalty class to store the penalty points
         self.generate_word_to_rhyme()  # We are generating a new word to rhyme
 
     def message_on_start(self):
@@ -22,21 +24,15 @@ class Rhyme:
         This function generates a new word to rhyme
         :return:
         """
-        api_url = 'https://api.datamuse.com/words?rel_jja=yellow'  # We are using this api to get a list of words
+        self.word_to_rhyme = randomWord.word(include_parts_of_speech=["nouns"], word_min_length=3, word_max_length=10)
+        api_url = 'https://api.datamuse.com/words?rel_rhy={}&max=1000'.format(
+            self.word_to_rhyme)  # We use the word to get a list of words that rhyme with it
         response = requests.get(api_url)
         if response.status_code == requests.codes.ok:
-            response = response.json()
-            self.word_to_rhyme = response[randint(0, len(response) - 1)][
-                'word']  # We choose a random word from the list
-            api_url = 'https://api.datamuse.com/words?rel_rhy={}'.format(
-                self.word_to_rhyme)  # We use the word to get a list of words that rhyme with it
-            response = requests.get(api_url)
-            if response.status_code == requests.codes.ok:
-                self.rhyming_words = response.json()  # convert response string to json
-            else:
-                print("Error:", response.status_code, response.text)
+            self.rhyming_words = response.json()  # convert response string to json
         else:
             print("Error:", response.status_code, response.text)
+
 
     async def play(self, message):
         """
@@ -110,11 +106,7 @@ class Rhyme:
         :param message:
         :return:
         """
-        # Check if author is already in the penalty dictionary
-        if message.author in self.penalty.penalty_points:
-            self.penalty.penalty_points[message.author] += 1
-        else:
-            self.penalty.penalty_points[message.author] = 1
+        self.competition.penalty.penalty(message.author)  # Add a penalty point to the user
         # Generate a message to send
         does_not_rhyme = ""
         if reason == "does not rhyme":
@@ -138,7 +130,7 @@ class Rhyme:
                 f"How original 🥱 {message.author}, {message.content} is already taken.",
                 f"Hey! {message.content} is my word."
             ])
-        await message.channel.send(self.penalty.message_on_fail(message.author)
+        await message.channel.send(self.competition.penalty.message_on_fail(message.author)
                                    + "\n" + does_not_rhyme
-                                   + "\n" + self.penalty.message_on_penalty(message.author))
+                                   + "\n" + self.competition.penalty.message_on_penalty(message.author))
         await self.competition.start_a_game(message)  # Start a new game
